@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bài học đầu cho con – Trò chơi trắc nghiệm</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Playfair+Display:wght@700&display=swap">
+<style>
+:root{--bg:#2B3A55;--grid:rgba(143,160,184,.14);--coral:#F5A6A0;--cream:#FFF1C9;--blue:#CFE8EF;--ok:#B7E4C7;--bad:#F7B49A;--ink:#243049;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;min-height:100vh;background-color:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:36px 36px;color:var(--cream);font-family:Nunito,"Segoe UI",Arial,sans-serif;font-size:30px;line-height:1.5;display:flex;justify-content:center}
+main{width:100%;max-width:1200px;padding:20px 18px 40px;position:relative}
+h1,h2{font-family:"Playfair Display",Georgia,serif;color:var(--coral);margin:0}
+.stars{display:flex;justify-content:center;gap:10px;font-size:44px;margin:4px 0 14px}
+.stars span{opacity:.25;filter:grayscale(1);transition:.4s}
+.stars span.on{opacity:1;filter:none;transform:scale(1.15)}
+.art{height:160px;border-radius:32px;border:4px dotted var(--cream);display:flex;align-items:center;justify-content:center;font-size:84px;margin-bottom:18px;background:radial-gradient(circle at 20% 30%,rgba(245,166,160,.55),transparent 45%),radial-gradient(circle at 80% 70%,rgba(207,232,239,.5),transparent 45%),radial-gradient(circle at 55% 20%,rgba(183,228,199,.45),transparent 40%),#3a4b6b}
+.q{font-size:clamp(36px,5.2vw,58px);line-height:1.3;font-weight:800;color:var(--coral);text-align:center;margin:0 0 20px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.opt{font:inherit;font-size:clamp(30px,4.4vw,46px);font-weight:800;color:var(--ink);background:var(--cream);border:5px solid transparent;border-radius:26px;padding:26px 20px;min-height:170px;cursor:pointer;text-align:center;transition:transform .15s,border-color .15s,background .2s}
+.opt:nth-child(2),.opt:nth-child(3){background:var(--blue)}
+.opt:hover:not(:disabled),.opt:focus-visible{transform:translateY(-4px);border-color:var(--coral);outline:none}
+.opt.ok{background:var(--ok);border-color:#fff;box-shadow:0 0 22px 6px rgba(255,241,201,.7);animation:glow 1s infinite alternate}
+.opt.bad{background:var(--bad);animation:shake .5s}
+.opt:disabled{cursor:default}
+@keyframes shake{25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-6px)}}
+@keyframes glow{to{box-shadow:0 0 30px 10px rgba(183,228,199,.8)}}
+.fb{margin-top:20px;padding:24px 26px;border-radius:26px;font-size:clamp(30px,4vw,42px);font-weight:700;line-height:1.45;display:none}
+.fb.ok{display:block;background:var(--ok);color:var(--ink)}
+.fb.bad{display:block;background:var(--bad);color:var(--ink)}
+.fb small{display:block;margin-top:12px;font-size:clamp(28px,3.6vw,38px);font-weight:600}
+.btn{font:inherit;font-size:clamp(32px,4vw,44px);font-weight:800;color:var(--ink);background:var(--coral);border:0;border-radius:999px;padding:24px 52px;cursor:pointer;margin-top:20px}
+.btn:hover,.btn:focus-visible{filter:brightness(1.08);outline:3px solid var(--cream)}
+.btn.alt{background:var(--blue)}
+.center{text-align:center}
+.start h1{font-size:clamp(44px,6.5vw,74px);line-height:1.2;margin:10px 0 18px}
+.start p{font-size:clamp(32px,4vw,42px);max-width:900px;margin:0 auto}
+.score{display:inline-block;background:var(--cream);color:var(--ink);border-radius:36px;padding:14px 48px;font-size:clamp(70px,11vw,110px);font-weight:800;margin:14px 0}
+.msg{font-size:clamp(30px,3.8vw,40px);max-width:1000px;margin:0 auto}
+.hide{display:none!important}
+@media(max-width:700px){body{font-size:26px}.opts{grid-template-columns:1fr}.q{font-size:34px}.opt{font-size:32px;min-height:120px}.art{height:120px;font-size:60px}.stars{font-size:36px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<section id="start" class="start center">
+<div class="art" aria-hidden="true">👶☁️🌙</div>
+<h1>Bài học đầu cho con<br>Hành trình khám phá thơ</h1>
+<p>Cùng trả lời 5 câu hỏi nhỏ để hiểu thêm về một bài thơ giản dị mà sâu lắng nhé!</p>
+<button class="btn" id="go">Bắt đầu hành trình ➜</button>
+</section>
+
+<section id="game" class="hide">
+<div class="stars" id="stars" aria-label="Tiến độ"></div>
+<div class="art" id="art" aria-hidden="true"></div>
+<h2 class="q" id="q"></h2>
+<div class="opts" id="opts"></div>
+<div class="fb" id="fb" role="status" aria-live="polite"></div>
+<div class="center"><button class="btn hide" id="next">Tiếp tục ➜</button></div>
+</section>
+
+<section id="end" class="hide center">
+<div class="art" aria-hidden="true">🌈🏡👶</div>
+<h2 style="font-size:clamp(42px,6vw,66px);line-height:1.25">Con đã hoàn thành hành trình!</h2>
+<div class="score" id="score"></div>
+<p class="msg" id="msg"></p>
+<button class="btn alt" id="again">Chơi lại 🔁</button>
+</section>
+</main>
+<script>
+const Q=[
+{e:"🖋️📓🕯️",q:"Tác giả của bài thơ “Bài học đầu cho con” là ai?",o:["Nguyễn Bính","Đỗ Trung Quân","Xuân Diệu","Tố Hữu"],a:1,
+ok:"Tuyệt vời! Con đã nhận ra người đã gửi gắm bao yêu thương vào những dòng thơ rồi đó. 🌟",
+bad:["Nguyễn Bính nổi tiếng với những vần thơ chân quê, nhưng đây chưa phải tác giả của bài này. Con thử lại nhé!","","Xuân Diệu là “ông hoàng thơ tình”, còn bài thơ này lại là lời của người cha nhắn nhủ con. Mình chọn lại nhé!","Tố Hữu là nhà thơ của thơ ca cách mạng. Con thử nghĩ đến tác giả của bài thơ về tuổi thơ và quê hương xem."],
+ex:"Bài thơ do nhà thơ Đỗ Trung Quân sáng tác. Ông là tác giả của nhiều bài thơ về quê hương và tình cảm gia đình."},
+{e:"🤝👶☁️",q:"Đối tượng được nhắn nhủ trong bài thơ là ai?",o:["Người mẹ","Người bạn","Người con","Người thầy"],a:2,
+ok:"Chính xác! Cái tên bài thơ đã là một lời gợi ý ngọt ngào rồi, đúng không nào? 💛",
+bad:["Mẹ là người rất đỗi thân thương, nhưng lời nhắn nhủ ở đây hướng đến một người khác. Thử đọc lại tên bài thơ nhé.","Người bạn chưa phải là người nhận lời nhắn này. Gợi ý: hãy nhìn vào hai chữ cuối của nhan đề.","","Thầy cô dạy ta nhiều điều, nhưng bài học “đầu tiên” này đến từ nơi gần gũi hơn. Chọn lại nhé!"],
+ex:"Nhan đề “Bài học đầu cho con” cho thấy người con là đối tượng được nhắn nhủ. Lời thơ là tâm tình của người lớn gửi đến đứa trẻ."},
+{e:"📚🔍🍵",q:"Khi viết bài nghị luận phân tích thơ, người viết cần làm gì?",o:["Chỉ kể lại nội dung bài thơ","Phân tích nội dung và nghệ thuật của bài thơ","Chỉ nêu tiểu sử tác giả","Chỉ nêu cảm xúc cá nhân"],a:1,
+ok:"Chuẩn rồi! Con đã hiểu: phân tích là “soi” vào cả nội dung lẫn nghệ thuật của bài thơ. ✨",
+bad:["Kể lại thì mới là bước đầu thôi. Bài nghị luận cần đi sâu hơn một chút. Con thử lại nhé!","","Tiểu sử tác giả giúp ta hiểu bối cảnh, nhưng không phải là toàn bộ bài viết. Chọn lại nhé!","Cảm xúc rất quý, nhưng cần đi kèm lập luận và phân tích cụ thể. Con thử đáp án khác nhé!"],
+ex:"Bài nghị luận cần làm rõ cả nội dung (ý nghĩa, tình cảm, thông điệp) lẫn nghệ thuật (hình ảnh, từ ngữ, giọng điệu, cấu tứ)."},
+{e:"🚪🌿⛵",q:"Phần mở bài của bài nghị luận văn học thường có nhiệm vụ gì?",o:["Giới thiệu tác giả, tác phẩm và vấn đề nghị luận","Phân tích toàn bộ bài thơ","Kể một câu chuyện bất kì","Khẳng định lại kết luận"],a:0,
+ok:"Giỏi lắm! Mở bài chính là cánh cửa đưa người đọc bước vào bài viết. 🚪🌟",
+bad:["","Phân tích toàn bộ là việc của phần thân bài. Mở bài chỉ nên “hé cửa” thôi. Con thử lại nhé!","Một câu chuyện bất kì có thể làm bài lạc hướng. Mở bài cần giới thiệu đúng điều sắp bàn tới.","Khẳng định lại là việc của phần kết bài, ở cuối hành trình. Chọn lại nhé!"],
+ex:"Mở bài dẫn vào đề: giới thiệu tác giả, tác phẩm và nêu vấn đề nghị luận. Phân tích chi tiết thuộc thân bài, khẳng định lại thuộc kết bài."},
+{e:"🌳📖⭐",q:"Điều gì giúp bài nghị luận phân tích thơ thuyết phục hơn?",o:["Dùng thật nhiều từ khó","Chỉ viết những lời khen","Đưa dẫn chứng thơ phù hợp và phân tích rõ ràng","Lặp lại nguyên văn bài thơ"],a:2,
+ok:"Xuất sắc! Dẫn chứng đúng chỗ cộng với phân tích rõ ràng chính là chìa khóa của một bài văn hay. 🌿⭐",
+bad:["Từ khó chưa chắc làm bài hay hơn, đôi khi còn làm người đọc khó hiểu. Con thử lại nhé!","Khen mà thiếu lí lẽ thì chưa thuyết phục. Người đọc cần thấy được “vì sao hay”.","","Chép lại cả bài thơ không phải là phân tích. Hãy chọn cách giúp ta giải thích điều mình nói."],
+ex:"Bài viết thuyết phục khi mọi nhận xét đều có dẫn chứng thơ phù hợp kèm phân tích rõ ràng, để người đọc thấy vì sao ý kiến ấy đúng."}
+];
+const M=[
+["0–2","Không sao đâu, hành trình nào cũng bắt đầu từ bước chân đầu tiên. Mỗi câu hỏi con vừa thử đã là một hạt mầm nhỏ. Hãy chơi lại để thấy hạt mầm ấy nở hoa nhé! 🌱"],
+["3–4","Con làm rất tốt! Mỗi lần thử lại là một bước tiến. Như người cha dạy con từng chút một, văn chương cũng cần thời gian để thấm. Hãy đọc lại bài thơ, rồi quay lại chinh phục tiếp nhé!"],
+["5","Tuyệt vời! Con đã đi trọn hành trình, và hơn cả điểm số, con đã hiểu cách một bài thơ biết ôm ấp ta bằng những điều giản dị. Văn học dạy ta cách yêu thương, và quê hương luôn là bài học đầu tiên, nơi ta học biết ơn, học làm người và học trở về."]];
+const $=id=>document.getElementById(id);
+let i=0,score=0,missed=false;
+function ding(){try{const c=new (window.AudioContext||window.webkitAudioContext)();[880,1320].forEach((f,k)=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.15,c.currentTime+k*.12);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+k*.12+.7);o.start(c.currentTime+k*.12);o.stop(c.currentTime+k*.12+.7)})}catch(e){}}
+function stars(){$("stars").innerHTML=Q.map((_,k)=>`<span class="${k<score?"on":""}">⭐</span>`).join("")}
+function show(id){["start","game","end"].forEach(s=>$(s).classList.toggle("hide",s!==id))}
+function load(){
+const d=Q[i];missed=false;stars();
+$("art").textContent=d.e;$("q").textContent=`Câu ${i+1}. ${d.q}`;
+$("fb").className="fb";$("fb").innerHTML="";$("next").classList.add("hide");
+$("opts").innerHTML="";
+d.o.forEach((t,k)=>{const b=document.createElement("button");b.className="opt";b.textContent="ABCD"[k]+". "+t;b.onclick=()=>pick(k,b);$("opts").appendChild(b)});
+}
+function pick(k,b){
+const d=Q[i],fb=$("fb");
+if(k===d.a){
+b.classList.add("ok");ding();
+document.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+if(!missed)score++;
+stars();
+fb.className="fb ok";fb.innerHTML=d.ok+"<small>"+d.ex+"</small>";
+$("next").textContent=i<Q.length-1?"Tiếp tục ➜":"Xem kết quả ⭐";
+$("next").classList.remove("hide");
+}else{
+missed=true;b.classList.remove("bad");void b.offsetWidth;b.classList.add("bad");b.disabled=true;
+fb.className="fb bad";fb.textContent=d.bad[k];
+}
+}
+$("go").onclick=()=>{i=0;score=0;show("game");load()};
+$("next").onclick=()=>{if(i<Q.length-1){i++;load()}else{
+$("score").textContent=`⭐ ${score}/5 ⭐`;
+$("msg").textContent=(score===5?M[2]:score>=3?M[1]:M[0])[1];
+show("end")}};
+$("again").onclick=()=>{i=0;score=0;show("game");load()};
+</script>
+</body>
+</html>
